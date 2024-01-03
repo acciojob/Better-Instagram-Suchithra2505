@@ -61,3 +61,13 @@ p {
 button {
   margin: 20px;
 }
+.image {
+  cursor: grab;
+  user-select: none;
+}
+
+.image:active {
+  cursor: grabbing;
+}
+
+

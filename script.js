@@ -1,35 +1,32 @@
 //your code here
-// Function to handle drag start
-function handleDragStart(event) {
-  event.dataTransfer.setData("text/plain", event.target.id);
-  event.target.classList.add("selected");
-}
+document.addEventListener('DOMContentLoaded', function () {
+  const parent = document.getElementById('parent');
+  let dragged;
 
-// Function to handle drag over
-function handleDragOver(event) {
-  event.preventDefault();
-}
+  parent.addEventListener('dragstart', function (event) {
+    dragged = event.target;
+    event.dataTransfer.setData('text/plain', ''); // required for Firefox
+  });
 
-// Function to handle drop
-function handleDrop(event) {
-  event.preventDefault();
-  const data = event.dataTransfer.getData("text/plain");
-  const draggedElement = document.getElementById(data);
-  const dropTarget = event.target;
+  parent.addEventListener('dragover', function (event) {
+    event.preventDefault();
+  });
 
-  // Swap images by swapping background-image property
-  const tempBackground = draggedElement.style.backgroundImage;
-  draggedElement.style.backgroundImage = dropTarget.style.backgroundImage;
-  dropTarget.style.backgroundImage = tempBackground;
+  parent.addEventListener('drop', function (event) {
+    event.preventDefault();
+    const target = event.target;
 
-  // Remove the selected class after dropping
-  draggedElement.classList.remove("selected");
-}
-
-// Get all image elements and add event listeners
-const imageElements = document.querySelectorAll(".image");
-imageElements.forEach((element) => {
-  element.addEventListener("dragstart", handleDragStart);
-  element.addEventListener("dragover", handleDragOver);
-  element.addEventListener("drop", handleDrop);
+    // Check if the drop target is a valid image element
+    if (target.classList.contains('image')) {
+      // Swap the background images
+      const temp = target.style.backgroundImage;
+      target.style.backgroundImage = dragged.style.backgroundImage;
+      dragged.style.backgroundImage = temp;
+    }
+  });
 });
+
+
+
+
+  
