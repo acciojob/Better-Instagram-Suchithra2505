@@ -1,31 +1,53 @@
 //your code here
-document.addEventListener('DOMContentLoaded', function () {
-  const parent = document.getElementById('parent');
-  let dragged;
 
-  parent.addEventListener('dragstart', function (event) {
-    dragged = event.target;
-    event.dataTransfer.setData('text/plain', ''); // required for Firefox
-  });
+let dragindex = 0;
+let dropindex = 0;
+let clone = "";
 
-  parent.addEventListener('dragover', function (event) {
-    event.preventDefault();
-  });
+const images = document.querySelectorAll(".image");
 
-  parent.addEventListener('drop', function (event) {
-    event.preventDefault();
-    const target = event.target;
+function drag(e) {
+  e.dataTransfer.setData("text", e.target.id);
+}
 
-    // Check if the drop target is a valid image element
-    if (target.classList.contains('image')) {
-      // Swap the background images
-      const temp = target.style.backgroundImage;
-      target.style.backgroundImage = dragged.style.backgroundImage;
-      dragged.style.backgroundImage = temp;
+function allowDrop(e) {
+  e.preventDefault();
+}
+
+function drop(e) {
+  clone = e.target.cloneNode(true);
+  let data = e.dataTransfer.getData("text");
+  let nodelist = document.getElementById("parent").childNodes;
+  console.log(data, e.target.id);
+  for (let i = 0; i < nodelist.length; i++) {
+    if (nodelist[i].id == data) {
+      dragindex = i;
     }
-  });
-});
+  }
 
+  dragdrop(clone);
+
+  document
+    .getElementById("parent")
+    .replaceChild(document.getElementById(data), e.target);
+
+  document
+    .getElementById("parent")
+    .insertBefore(
+      clone,
+      document.getElementById("parent").childNodes[dragindex]
+    );
+}
+
+const dragdrop = (image) => {
+  image.ondragstart = drag;
+  image.ondragover = allowDrop;
+  image.ondrop = drop;
+};
+
+images.forEach(dragdrop);
+
+ 
 
 
 
